@@ -11,9 +11,12 @@
 @implementation UITextView (Placeholder)
 
 + (void)load{
-    Method oldDealloc = class_getInstanceMethod([self class], NSSelectorFromString(@"dealloc"));
-    Method newDealloc = class_getInstanceMethod([self class], sel_registerName("jl_dealloc"));
-    method_exchangeImplementations(oldDealloc, newDealloc);
+    static dispatch_once_t once;
+    dispatch_once(&once, ^{
+        Method oldDealloc = class_getInstanceMethod([self class], NSSelectorFromString(@"dealloc"));
+        Method newDealloc = class_getInstanceMethod([self class], sel_registerName("jl_dealloc"));
+        method_exchangeImplementations(oldDealloc, newDealloc);
+    });
 }
 
 #pragma mark - LifeCycle
